@@ -1,7 +1,7 @@
 const host = 'http://localhost:3030/'
 
 export async function requester(method, url, data) {
-    const validateUser = sessionStorage.getItem("user")
+    const validateUser = JSON.parse(sessionStorage.getItem("userData"))
     const options = {
         method,
         headers: {},
@@ -13,14 +13,14 @@ export async function requester(method, url, data) {
     }
 
     if(validateUser){
-        const user = JSON.parse(validateUser)
-        options.headers["X-Authorization"] = user.accessToken
+        const token = validateUser.accessToken;
+        options.headers["X-Authorization"] = token;
     }
 
     try {
 
         const response = await fetch(host + url, options)
-
+        
         if (response.status == 204) {
             return response
         }
@@ -28,6 +28,9 @@ export async function requester(method, url, data) {
         const data = await response.json();
 
         if (response.ok === false) {
+            if(response.status === 403){
+                sessionStorage.removeItem('user')
+            }
             throw new Error(data.message)
         }
 

@@ -1,7 +1,6 @@
 import { html, page } from '../../lib.js'
 import { login } from '../data/user.js';
 
-let navigate = null;
 
 const loginTemplate = () => html`
 <div class="row space-top">
@@ -30,6 +29,7 @@ const loginTemplate = () => html`
 async function onSubmit(e) {
     e.preventDefault();
     const form = e.target;
+    debugger
     const { email, password } = Object.fromEntries(new FormData(form))
 
     if (!email || !password) {
@@ -40,6 +40,6 @@ async function onSubmit(e) {
 
 }
 
-export function showLogin(context, nav) {
+export function showLogin(context) {
     context.render(loginTemplate())
 }

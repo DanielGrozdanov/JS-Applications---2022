@@ -1,7 +1,9 @@
 const { chromium } = require('playwright-chromium');
 const { expect } = require('chai');
 
-const host = 'http://localhost:3000'; // Application host (NOT service host - that can be anything)
+const userApplicationHttpPort = '#userApplicationHttpPort#';
+
+const host = 'http://localhost:' + userApplicationHttpPort; // Application host (NOT service host - that can be anything)
 
 const interval = 300;
 const timeout = 6000;
@@ -103,7 +105,7 @@ describe('E2E tests', function () {
       await page.goto(host);
       await page.waitForSelector('#registerLink');
       await page.click('text=Register');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
 
       await page.fill('[name="email"]', data.email);
@@ -129,9 +131,9 @@ describe('E2E tests', function () {
       await page.goto(host);
       await page.waitForSelector('#loginLink');
       await page.click('text=Login');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
-
+      await page.waitForTimeout(interval);
       await page.fill('[name="email"]', data.email);
       await page.fill('[name="password"]', data.password);
 
@@ -156,7 +158,7 @@ describe('E2E tests', function () {
 
       await page.waitForSelector('#loginLink');
       await page.click('text=Login');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
       await page.fill('[name="email"]', data.email);
       await page.fill('[name="password"]', data.password);
@@ -180,7 +182,7 @@ describe('E2E tests', function () {
     it('Guest user should see correct navigation', async () => {
       await page.goto(host);
       await page.waitForSelector('nav');
-
+      await page.waitForTimeout(interval);
       expect(await page.isVisible('nav >> text=Dashboard')).to.be.true;
       expect(await page.isVisible('nav >> text=Login')).to.be.true;
       expect(await page.isVisible('nav >> text=Register')).to.be.true;
@@ -195,9 +197,9 @@ describe('E2E tests', function () {
       const data = mockData.users[0];
       await page.goto(host);
       await page.waitForSelector('#loginLink');
-
+      await page.waitForTimeout(interval);
       await page.click('nav >> text=Login');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
       await page.fill('[name="email"]', data.email);
       await page.fill('[name="password"]', data.password);
@@ -220,13 +222,13 @@ describe('E2E tests', function () {
       const data = mockData.users[0];
       await page.goto(host);
       await page.waitForSelector('#loginLink');
-
+      await page.waitForTimeout(interval);
       await page.click('nav >> text=Login');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
       await page.fill('[name="email"]', data.email);
       await page.fill('[name="password"]', data.password);
-
+      await page.waitForTimeout(interval);
       await page.click('[type="submit"]');
       await page.waitForSelector('nav');
 
@@ -241,7 +243,7 @@ describe('E2E tests', function () {
 
       await page.waitForSelector('#logoutBtn');
       await page.click('nav >> text=Logout');
-
+      await page.waitForTimeout(interval);
       expect(await page.isVisible('nav >> text=Dashboard')).to.be.true;
       expect(await page.isVisible('nav >> text=Login')).to.be.true;
       expect(await page.isVisible('nav >> text=Register')).to.be.true;
@@ -258,7 +260,7 @@ describe('E2E tests', function () {
 
       await page.goto(host);
       await page.waitForSelector('.card');
-
+      await page.waitForTimeout(interval);
       const titles = await page.$$eval(`.card p`, (t) =>
         t.map((s) => s.textContent)
       );
@@ -273,7 +275,7 @@ describe('E2E tests', function () {
       const data = mockData.catalog[0];
       await page.goto(host);
       await page.waitForSelector('.container');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('.container');
       await page.click(
         `.card-body:has-text("${data.description}") >> text=Details`
@@ -309,7 +311,7 @@ describe('E2E tests', function () {
 
       await page.waitForSelector('form');
       page.click('[type="submit"]');
-
+      await page.waitForTimeout(interval);
       expect(isCalled()).to.be.false;
     });
 
@@ -336,10 +338,11 @@ describe('E2E tests', function () {
       await page.click(
         `.card-body:has-text("${data.description}") >> text=Details`
       );
+      await page.waitForTimeout(interval);
       await page.waitForSelector('.btn-info');
 
       await page.click('text=Edit');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('form');
 
       const formData = {
@@ -368,7 +371,7 @@ describe('E2E tests', function () {
       const { isHandled } = put();
 
       await page.click('nav >> text=Dashboard');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('.container');
       await page.click(
         `.card-body:has-text("${data.description}") >> text=Details`
@@ -398,12 +401,12 @@ describe('E2E tests', function () {
 
       await page.click('nav >> text=Dashboard');
       await page.waitForSelector('.container');
-
+      await page.waitForTimeout(interval);
       await page.waitForSelector('.container');
       await page.click(
         `.card-body:has-text("${data.description}") >> text=Details`
       );
-
+      await page.waitForTimeout(interval);
       page.on('dialog', (dialog) => dialog.accept());
 
       await Promise.all([onResponse(), page.click('text="Delete"')]);
@@ -436,7 +439,7 @@ describe('E2E tests', function () {
       await page.waitForSelector('#profileLink');
       await page.click('text=My Publication');
       await page.waitForSelector('.card');
-
+      await page.waitForTimeout(interval);
       const titles = await page.$$eval('.card p', (t) =>
         t.map((s) => s.textContent)
       );
