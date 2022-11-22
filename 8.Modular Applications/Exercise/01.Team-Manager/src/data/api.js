@@ -1,10 +1,18 @@
+import { getUserData } from "../util/util.js";
+import { clearUserData } from "../util/util.js";
+
 const host = 'http://localhost:3030/'
 
-export async function requester(method, url, data) {
+export async function requester(method, endpoint, data) {
 
     const options = {
         method,
         headers: {},
+    }
+
+    const user = getUserData();
+    if(user){
+        options.headers["X-Authorization"] = user.accessToken;
     }
 
     if (data) {
@@ -12,11 +20,9 @@ export async function requester(method, url, data) {
         options.body = JSON.stringify(data);
     }
 
-    //TODO: must add X-Authorization check for logged user.
-
     try {
 
-        const response = await fetch(host + url, options)
+        const response = await fetch(host + endpoint, options)
 
         if (response.status == 204) {
             return response
@@ -26,7 +32,7 @@ export async function requester(method, url, data) {
 
         if (response.ok == false) {
             if (response.status == 403) {
-                sessionStorage.removeItem('userData')
+                clearUserData();
             }
             throw new Error(data.message)
         }

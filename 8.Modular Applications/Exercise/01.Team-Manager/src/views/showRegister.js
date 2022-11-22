@@ -1,7 +1,7 @@
 import { html } from "../../lib.js"
 import {validator} from "../../validator.js"
 import { register } from "../data/user.js"
-import { createSubmitHandler } from "../util/until.js"
+import { createSubmitHandler } from "../util/util.js"
 
 export function showRegisterView(context) {
     context.render(renderRegisterTemplate(createSubmitHandler(onSubmit), false))
@@ -13,6 +13,7 @@ export function showRegisterView(context) {
                 throw new Error("Passwords do not match")
             }
             await register({ email, username, password })
+            context.updateNav();
             context.page.redirect("/")
         } catch (error) {
             context.render(renderRegisterTemplate(createSubmitHandler(onSubmit), error))

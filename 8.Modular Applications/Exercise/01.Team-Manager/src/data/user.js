@@ -1,4 +1,4 @@
-import { setUserData } from "../util/until.js";
+import { clearUserData, setUserData } from "../util/util.js";
 import * as api from "./api.js";
 
 const endPoints = {
@@ -18,7 +18,11 @@ export async function login({ email, password }) {
     return content;
 }
 
-
+export async function logout(){
+    api.get(endPoints.logout);
+    clearUserData();
+    
+}
 
 
 

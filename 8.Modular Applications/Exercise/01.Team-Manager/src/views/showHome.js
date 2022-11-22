@@ -1,9 +1,11 @@
 import { html } from "../../lib.js"
+import { getUserData } from "../util/util.js"
 export function showHome(context) {
-    context.render(showHomeTemplate())
+    const user = getUserData();
+    context.render(showHomeTemplate(user))
 }
 
-const showHomeTemplate = () => html`
+const showHomeTemplate = (loggedIn) => html`
             <section id="home">
                 <article class="hero layout">
                     <img src="./assets/team.png" class="left-col pad-med">
@@ -11,8 +13,8 @@ const showHomeTemplate = () => html`
                         <h2>Welcome to Team Manager!</h2>
                         <p>Want to organize your peers? Create and manage a team for free.</p>
                         <p>Looking for a team to join? Browse our communities and find like-minded people!</p>
-                        <a href="#" class="action cta">Sign Up Now</a>
-                        <a href="#" class="action cta">Browse Teams</a>
+                        ${loggedIn ? html`<a href="/browse" class="action cta">Browse Teams</a>` : html`<a href="/register"
+                            class="action cta">Sign Up Now</a>`}
                     </div>
                 </article>
             </section>`

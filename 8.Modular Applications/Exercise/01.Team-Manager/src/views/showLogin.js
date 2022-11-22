@@ -1,6 +1,6 @@
 import { html } from "../../lib.js"
 import { validator } from "../../validator.js"
-import { createSubmitHandler } from "../util/until.js"
+import { createSubmitHandler } from "../util/util.js"
 import { login } from "../data/user.js";
 
 export function showLoginView(context) {
@@ -10,6 +10,7 @@ export function showLoginView(context) {
         try {
             validator(login, { email, password });
             await login({ email, password })
+            context.updateNav();
             context.page.redirect("/")
         } catch (error) {
             context.render(renderLoginTemplate(createSubmitHandler(onSubmit), error))
@@ -31,7 +32,7 @@ const renderLoginTemplate = (onSubmit,error) => html`
             <label>Password: <input type="password" name="password"></label>
             <input class="action cta" type="submit" value="Sign In">
         </form>
-        <footer class="pad-small">Don't have an account? <a href="#" class="invert">Sign up here</a>
+        <footer class="pad-small">Don't have an account? <a href="/register" class="invert">Sign up here</a>
         </footer>
     </article>
 </section>`
